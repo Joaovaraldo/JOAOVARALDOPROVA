@@ -39,7 +39,7 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excluir Usuário</title>
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="styles.css">
     <script src="validacoes.js"></script>
     <style>
         table {
@@ -105,7 +105,6 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])){
     <a href="principal.php">
         <img src="img/voltar.png" alt="Voltar">
     </a>
-    <br>
     <br>
     <center>
         <address>
