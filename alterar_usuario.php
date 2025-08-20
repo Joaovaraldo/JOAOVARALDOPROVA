@@ -3,11 +3,10 @@ session_start();
 require_once 'conexao.php';
 
 //VERIFICA SE O USUÁRIO TEM PERMISSÃO DE ADM
-if($_SESSION['perfil'] != 1){
+if($_SESSION['perfil'] !=1){
     echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
-    exit();
+exit();
 }
-
 //INICIALIZA VARIAVEIS
 $usuario = null;
 
@@ -17,18 +16,18 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
         //VERIFICA SE A BUSCA É UM NÚMERO (ID) OU UM NOME
         if(is_numeric($busca)){
-            $sql = "SELECT * FROM usuario WHERE id_usuario = :busca";
+            $sql = "SELECT * FROM usuario WHERE id_usuario =:busca";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
+            $stmt->bindParam(':busca',$busca,PDO::PARAM_INT);
         }else{
             $sql = "SELECT * FROM usuario WHERE nome LIKE :busca_nome";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
+            $stmt->bindValue(':busca_nome',"%$busca%",PDO::PARAM_STR);
         }
         $stmt->execute();
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        //SE O USUARIO NÃO FOR ENCONTRADO, EXIBE UM ALERTA
+        //SE O USUARIO NÃO FOR ENCOTRADO, EXIBE UM ALERTA
         if(!$usuario){
             echo "<script>alert('Usuário não encontrado!');</script>";
         }
@@ -42,10 +41,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alterar Usuário</title>
     <link rel="stylesheet" href="styles.css"/>
+    <!--CERTIFIQUE-SE DE QUE O JAVASCRIPT ESTÁ SENDO CARREGADO CORRETAMENTE-->
     <script src="scripts.js"></script>
     <style>
-        img {
-            max-width: 45px;
+        img{
+            max-width:45px;
         }
     </style>
 </head>
@@ -56,13 +56,15 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <label for="busca_usuario">Digite o ID ou o nome do usuário: </label>
         <input type="text" id="busca_usuario" name="busca_usuario" required onkeyup="buscarSugestoes()">
 
-        <!--DIV PARA EXIBIR SUGESTÕES DE USUÁRIOS-->
-        <div id="sugestoes"></div>
-        <button type="submit">Pesquisar</button>
-    </form>
+    <!--DIV PARA EXIBIR SUGESTÕES DE USUÁRIOS-->
+    <div id="sugestoes"></div>
+    <button type="submit">Pesquisar</button>
 
+    </form>
     <?php if($usuario): ?>
         <!--FORMULÁRIO PARA ALTERAR USUÁRIO-->
+        <?php include 'menu.php'; ?>
+
         <form action="processa_alteracao_usuario.php" method="POST">
             <input type="hidden" name="id_usuario" value="<?=htmlspecialchars($usuario['id_usuario'])?>">
 
@@ -71,36 +73,34 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
             <label for="email">Email: </label>
             <input type="email" name="email" id="email" value="<?=htmlspecialchars($usuario['email'])?>" required>       
-            
+        
             <label for="id_perfil">Perfil: </label>
             <select id="id_perfil" name="id_perfil">
-                <option value="1" <?= $usuario['id_perfil'] == 1 ? 'selected' : '' ?>>Administrador</option>
-                <option value="2" <?= $usuario['id_perfil'] == 2 ? 'selected' : '' ?>>Secretaria</option>
-                <option value="3" <?= $usuario['id_perfil'] == 3 ? 'selected' : '' ?>>Almoxarife</option>
-                <option value="4" <?= $usuario['id_perfil'] == 4 ? 'selected' : '' ?>>Cliente</option>
+                <option value="1"<?=$usuario['id_perfil']== 1?'select':''?>>Admnistrador</option>
+                <option value="2"<?=$usuario['id_perfil']== 2?'select':''?>>Secretaria</option>
+                <option value="3"<?=$usuario['id_perfil']== 3?'select':''?>>Almoxarife</option>
+                <option value="4"<?=$usuario['id_perfil']== 4?'select':''?>>Cliente</option>
             </select>
-
             <!--SE O USUARIO LOGADO FOR UM ADM, EXIBIR OPCAO DE ALTERAR SENHA-->
-            <?php if($_SESSION['perfil'] == 1): ?>
+            <?php if($_SESSION['perfil']==1): ?>
                 <label for="nova_senha">Nova Senha:</label>
                 <input type="password" id="nova_senha" name="nova_senha">
             <?php endif;?>
 
-            <button type="submit">Alterar</button>
-            <button type="reset">Cancelar</button>
+                <button type="submit">Alterar</button>
+                <button type="reset">Cancelar</button>
         </form>
     <?php endif;?>
-
     <br>
     <a href="principal.php">
-        <img src="img/voltar.png" alt="Voltar">
+    <img src="img/voltar.png">
     </a>
-
+    </form>
     <br>
     <center>
-        <address>
-            João Paulo Varaldo - Técnico de desenvolvimento de sistemas
-        </address>
+        <adress>
+        João Paulo Varaldo - Técnico de desenvolvimento de sistemas
+        </adress>
     </center>
 </body>
 </html>
