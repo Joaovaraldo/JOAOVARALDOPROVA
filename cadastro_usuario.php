@@ -48,7 +48,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styles.css">
     <title>Cadastrar Usuário</title>
     <script src="validacoes.js"></script>
-    
+    <style>
+        img {
+            max-width: 45px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        form label {
+            margin-top: 10px;
+        }
+        form input, form select {
+            padding: 5px;
+        }
+        form button {
+            margin-top: 15px;
+            padding: 8px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <!-- Inclui o menu dinâmico -->
