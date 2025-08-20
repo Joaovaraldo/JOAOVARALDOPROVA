@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 require_once 'conexao.php';
 
@@ -8,35 +8,61 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-// Verifica se o usuário tem permissão (perfil 1 = administrador)
+//  Verifica se o usuário é administrador
 if ($_SESSION['perfil'] != 1) {
     echo "Acesso Negado";
     exit;
 }
 
-// Recupera o ID do perfil do usuário logado
-$id_perfil = $_SESSION['perfil'];
-
-// Processa o formulário de cadastro
+//  Processa o POST do formulário
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
-    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+    $senha = $_POST['senha'];
     $id_perfil_form = $_POST['id_perfil'];
 
+    // Validações back-end
+    if (strlen($nome) < 3) {
+        echo "<script>alert('O nome deve ter pelo menos 3 caracteres.');</script>";
+        exit;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Digite um e-mail válido.');</script>";
+        exit;
+    }
+
+    if (strlen($senha) < 6) {
+        echo "<script>alert('A senha deve ter pelo menos 6 caracteres.');</script>";
+        exit;
+    }
+
+    // Verifica se o e-mail já está cadastrado
+    $checkEmail = $pdo->prepare("SELECT id_usuario FROM usuario WHERE email = :email");
+    $checkEmail->bindParam(':email', $email);
+    $checkEmail->execute();
+
+    if ($checkEmail->rowCount() > 0) {
+        echo "<script>alert('Este e-mail já está em uso.');</script>";
+        exit;
+    }
+
+    // Hash da senha
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+    // Inserção no banco
     $sql = "INSERT INTO usuario (nome, email, senha, id_perfil) 
             VALUES (:nome, :email, :senha, :id_perfil)";
-    
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':senha', $senha);
+    $stmt->bindParam(':senha', $senhaHash);
     $stmt->bindParam(':id_perfil', $id_perfil_form);
 
     if ($stmt->execute()) {
         echo "<script>alert('Usuário cadastrado com sucesso!');</script>";
     } else {
-        echo "<script>alert('Erro ao cadastrar usuário');</script>";
+        echo "<script>alert('Erro ao cadastrar usuário.');</script>";
     }
 }
 ?>
