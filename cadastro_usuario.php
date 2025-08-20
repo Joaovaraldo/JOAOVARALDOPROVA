@@ -14,6 +14,9 @@ if ($_SESSION['perfil'] != 1) {
     exit;
 }
 
+// Recupera o ID do perfil do usuário logado
+$id_perfil = $_SESSION['perfil'];
+
 // Processa o formulário de cadastro
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST['nome']);
