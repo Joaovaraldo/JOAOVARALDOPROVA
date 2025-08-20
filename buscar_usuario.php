@@ -24,13 +24,12 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && !empty($_POST['busca'])){
         $stmt=$pdo->prepare($sql);
         $stmt->bindValue(':busca_nome',"$busca%",PDO::PARAM_STR);
     }
-    }else{
-        $sql = "SELECT * FROM usuario order by nome ASC";
-       $stmt = $pdo->prepare($sql);
-
-    }
-    $stmt->execute();
-    $usuarios = $stmt->fetchALL(PDO::FETCH_ASSOC);
+}else{
+    $sql = "SELECT * FROM usuario ORDER BY nome ASC";
+    $stmt = $pdo->prepare($sql);
+}
+$stmt->execute();
+$usuarios = $stmt->fetchALL(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -40,45 +39,47 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && !empty($_POST['busca'])){
     <title>Lista de Usuários</title>
     <link rel="stylesheet" href="styles.css"/>
     <style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 800px;
-        margin-top: 20px;
-        font-family: Arial, sans-serif;
-        border-radius: 3px;
-    }
-    th, td {
-        border: 1px solid #333;
-        padding: 8px 12px;
-        text-align: left;
-    }
-    th {
-        background-color:rgb(3, 128, 245);
-        color: white;
-    }
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-    tr:hover {
-        background-color: #ddd;
-    }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            border-radius: 3px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color:rgb(3, 128, 245);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
         img{
             max-width:45px;
         }
-   
-</style>
-
-  
+    </style>
 </head>
 <body>
+
+    <!-- Inclui o menu -->
+    <?php include 'menu.php'; ?>
+
     <h2>Lista de Usuários</h2>
     <form action="buscar_usuario.php" method="POST">
-        <label for="busca">Digite o ID ou NOME(opcional): </label>
+        <label for="busca">Digite o ID ou NOME (opcional): </label>
         <input type="text" id="busca" name="busca">
 
         <button type="submit">Pesquisar</button>
     </form>
+
     <?php if(!empty($usuarios)): ?>
         <table border="1" align="center">
             <tr>
@@ -90,30 +91,30 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && !empty($_POST['busca'])){
             </tr>
             <?php foreach($usuarios as $usuario): ?>
                 <tr>
-                <td><?=htmlspecialchars($usuario['id_usuario'])?></td>
-                <td><?=htmlspecialchars($usuario['nome'])?></td>
-                <td><?=htmlspecialchars($usuario['email'])?></td>
-                <td><?=htmlspecialchars($usuario['id_perfil'])?></td>
-                <td>
-                    <a href="alterar_usuario.php?id=<?=htmlspecialchars($usuario['id_usuario'])?>">Alterar</a>
-
-                    <a href="excluir_usuario.php?id=<?=htmlspecialchars($usuario['id_usuario'])?>"onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
-                </td>
-            </tr>
-        <?php endforeach;?>
+                    <td><?=htmlspecialchars($usuario['id_usuario'])?></td>
+                    <td><?=htmlspecialchars($usuario['nome'])?></td>
+                    <td><?=htmlspecialchars($usuario['email'])?></td>
+                    <td><?=htmlspecialchars($usuario['id_perfil'])?></td>
+                    <td>
+                        <a href="alterar_usuario.php?id=<?=htmlspecialchars($usuario['id_usuario'])?>">Alterar</a>
+                        <a href="excluir_usuario.php?id=<?=htmlspecialchars($usuario['id_usuario'])?>" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
+                    </td>
+                </tr>
+            <?php endforeach;?>
         </table>
-        <?php else:?>
-            <p>Nenhum usuário encontrado.</p>
-        <?php endif;?>
-            <br>
-        <a href="principal.php">
-    <img src="img/voltar.png">
+    <?php else:?>
+        <p>Nenhum usuário encontrado.</p>
+    <?php endif;?>
+
+    <br>
+    <a href="principal.php">
+        <img src="img/voltar.png" alt="Voltar">
     </a>
     <br>
     <center>
-        <adress>
-        João Paulo Varaldo - Técnico de desenvolvimento de sistemas
-        </adress>
+        <address>
+            João Paulo Varaldo - Técnico de desenvolvimento de sistemas
+        </address>
     </center>
 </body>
 </html>
