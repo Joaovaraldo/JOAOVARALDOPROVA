@@ -106,6 +106,7 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])){
         <img src="img/voltar.png" alt="Voltar">
     </a>
     <br>
+    <br>
     <center>
         <address>
             João Paulo Varaldo - Técnico de desenvolvimento de sistemas
