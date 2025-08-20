@@ -115,3 +115,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['busca_usuario']) && !i
 <?php if ($sucesso): ?>
     <div class="sucesso"><?= $sucesso ?></div>
 <?php endif; ?>
+
+<!-- Formulário de busca -->
+<form action="alterar_usuario.php" method="POST">
+    <label for="busca_usuario">Digite o ID ou o nome do usuário: </label>
+    <input type="text" id="busca_usuario" name="busca_usuario" required onkeyup="buscarSugestoes()" value="<?= htmlspecialchars($busca_valor) ?>">
+    <div id="sugestoes"></div>
+    <button type="submit">Pesquisar</button>
+</form>
+
+<?php if ($usuario): ?>
+    <!-- Formulário de alteração -->
+    <form action="alterar_usuario.php" method="POST" onsubmit="return validarUsuario()">
+        <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($usuario['id_usuario']) ?>">
+
+        <label for="nome">Nome: </label>
+        <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
+
+        <label for="id_perfil">Perfil: </label>
+        <select id="id_perfil" name="id_perfil">
+            <option value="1" <?= $usuario['id_perfil']==1 ? 'selected':'' ?>>Administrador</option>
+            <option value="2" <?= $usuario['id_perfil']==2 ? 'selected':'' ?>>Secretaria</option>
+            <option value="3" <?= $usuario['id_perfil']==3 ? 'selected':'' ?>>Almoxarife</option>
+            <option value="4" <?= $usuario['id_perfil']==4 ? 'selected':'' ?>>Cliente</option>
+        </select>
+
+        <label for="nova_senha">Nova Senha:</label>
+        <input type="password" id="nova_senha" name="nova_senha">
+
+        <button type="submit">Alterar</button>
+        <button type="reset">Cancelar</button>
+    </form>
+<?php endif; ?>
+
+<div style="text-align:center;">
+    <a href="principal.php">
+        <img src="img/voltar.png" alt="Voltar">
+    </a>
+</div>
+
+<br>
+<center>
+    <address>
+        João Paulo Varaldo - Técnico de desenvolvimento de sistemas
+    </address>
+</center>
+</body>
+</html>
