@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include 'menu.php'; ?>
 
     <h2 style="text-align:center;">Cadastrar Usuário</h2>
-    <form action="cadastro_usuario.php" method="POST">
+    <form action="cadastro_usuario.php" method="POST" onsubmit="return validarUsuario()">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required>
     
