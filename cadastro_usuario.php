@@ -1,7 +1,6 @@
 <?php 
 session_start();
 require_once 'conexao.php';
-require_once 'permissoes.php'; // Importa o array de permissões
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['usuario'])) {
@@ -14,12 +13,6 @@ if ($_SESSION['perfil'] != 1) {
     echo "Acesso Negado";
     exit;
 }
-
-// Recupera o ID do perfil do usuário logado
-$id_perfil = $_SESSION['perfil'];
-
-// Define as opções do menu para o perfil atual
-$opcoes_menu = $permissoes[$id_perfil];
 
 // Processa o formulário de cadastro
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
