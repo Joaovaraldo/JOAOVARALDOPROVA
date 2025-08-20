@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </script>
 <center>
     <adress>
-        Gustavo Tobler - Técnico em desenvolvimento de sistemas
+    João Paulo Varaldo - Técnico de desenvolvimento de sistemas
     </adress>
 </center>
 </body>

@@ -103,7 +103,7 @@ if(isset($_GET['id'])&& is_numeric($_GET['id'])){
     <br>
     <center>
         <adress>
-            Gustavo Tobler - Técnico de desenvolvimento de sistemas
+        João Paulo Varaldo - Técnico de desenvolvimento de sistemas
         </adress>
     </center>
 </body>

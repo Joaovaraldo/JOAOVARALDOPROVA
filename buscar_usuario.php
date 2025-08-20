@@ -112,7 +112,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && !empty($_POST['busca'])){
     <br>
     <center>
         <adress>
-            Gustavo Tobler - Técnico de desenvolvimento de sistemas
+        João Paulo Varaldo - Técnico de desenvolvimento de sistemas
         </adress>
     </center>
 </body>
