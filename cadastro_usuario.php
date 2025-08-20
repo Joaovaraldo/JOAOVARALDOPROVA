@@ -24,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validações back-end
     if (strlen($nome) < 3) {
         echo "<script>alert('O nome deve ter pelo menos 3 caracteres.');</script>";
-        exit;
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
