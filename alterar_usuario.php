@@ -11,19 +11,20 @@ if ($_SESSION['perfil'] != 1) {
 $usuario = null;
 $erro = '';
 $sucesso = '';
+$busca_valor = ''; // Mantém o valor da busca no campo
 
 // Pesquisar usuário
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['busca_usuario'])) {
-    $busca = trim($_POST['busca_usuario']);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['busca_usuario']) && empty($_POST['id_usuario'])) {
+    $busca_valor = trim($_POST['busca_usuario']);
 
-    if (is_numeric($busca)) {
+    if (is_numeric($busca_valor)) {
         $sql = "SELECT * FROM usuario WHERE id_usuario = :busca";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
+        $stmt->bindParam(':busca', $busca_valor, PDO::PARAM_INT);
     } else {
         $sql = "SELECT * FROM usuario WHERE nome LIKE :busca_nome";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
+        $stmt->bindValue(':busca_nome', "%$busca_valor%", PDO::PARAM_STR);
     }
     $stmt->execute();
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['busca_usuario'])) {
     }
 }
 
-// Processar alteração (substitui processa_alteracao_usuario.php)
+// Processar alteração
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_usuario'])) {
     $id_usuario = $_POST['id_usuario'];
     $nome = trim($_POST['nome']);
@@ -66,7 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_usuario'])) {
 
         if ($stmt->execute()) {
             $sucesso = "Usuário alterado com sucesso!";
-            // Atualiza a variável $usuario para manter os dados no formulário
             $usuario['nome'] = $nome;
             $usuario['email'] = $email;
             $usuario['id_perfil'] = $id_perfil_form;
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_usuario'])) {
 <!-- Formulário de busca -->
 <form action="alterar_usuario.php" method="POST">
     <label for="busca_usuario">Digite o ID ou o nome do usuário: </label>
-    <input type="text" id="busca_usuario" name="busca_usuario" required onkeyup="buscarSugestoes()">
+    <input type="text" id="busca_usuario" name="busca_usuario" required onkeyup="buscarSugestoes()" value="<?= htmlspecialchars($busca_valor) ?>">
     <div id="sugestoes"></div>
     <button type="submit">Pesquisar</button>
 </form>
