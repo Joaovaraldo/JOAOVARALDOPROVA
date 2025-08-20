@@ -27,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $erro = "O nome deve ter pelo menos 3 caracteres.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erro = "Digite um e-mail válido.";
-    } elseif (strlen($senha) < 6) {
-        $erro = "A senha deve ter pelo menos 6 caracteres.";
+    } elseif (strlen($senha) < 8) {
+        $erro = "A senha deve ter pelo menos 8 caracteres.";
     } else {
         // Verifica email duplicado
         $checkEmail = $pdo->prepare("SELECT id_usuario FROM usuario WHERE email = :email");
