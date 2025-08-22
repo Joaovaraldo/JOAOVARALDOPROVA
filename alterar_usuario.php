@@ -44,12 +44,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_usuario'])) {
         }
 
         if ($stmt->execute()) {
-            $sucesso = "Usuário alterado com sucesso!";
             // Recarrega os dados atualizados para exibir no formulário
             $stmt2 = $pdo->prepare("SELECT * FROM usuario WHERE id_usuario = :id_usuario");
             $stmt2->bindParam(':id_usuario', $id_usuario);
             $stmt2->execute();
             $usuario = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('Usuário atualizado com sucesso!');window.location.href='buscar_usuario.php';</script>";
+            }
+            $sucesso = "Usuário alterado com sucesso!";
+            // Limpa os campos do formulário
+            $nome = '';
+            $email = '';
+            $id_perfil_form = '';
         } else {
             $erro = "Erro ao alterar usuário.";
             // Mantém o formulário preenchido mesmo se houver erro
@@ -87,81 +95,115 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['busca_usuario']) && !i
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alterar Usuário</title>
-<link rel="stylesheet" href="styles.css" />
-<script src="validacoes.js"></script>
-<style>
-    img { max-width: 45px; }
-    form { display: flex; flex-direction: column; max-width: 400px; margin: 20px auto; }
-    form label { margin-top: 10px; }
-    form input, form select { padding: 5px; }
-    form button { margin-top: 15px; padding: 8px; cursor: pointer; }
-    .erro { color: red; text-align: center; margin-bottom: 10px; }
-    .sucesso { color: green; text-align: center; margin-bottom: 10px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Usuário</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="validacoes.js"></script>
+    <style>
+        img {
+            max-width: 45px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        form label {
+            margin-top: 10px;
+        }
+
+        form input,
+        form select {
+            padding: 5px;
+        }
+
+        form button {
+            margin-top: 15px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .erro {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .sucesso {
+            color: green;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
+
 <body>
-<?php include 'menu.php'; ?>
+    <?php include 'menu.php'; ?>
 
-<h2 style="text-align:center;">Alterar Usuário</h2>
+    <h2 style="text-align:center;">Alterar Usuário</h2>
 
-<?php if ($erro): ?>
-    <div class="erro"><?= $erro ?></div>
-<?php endif; ?>
+    <?php if ($erro): ?>
+        <div class="erro"><?= $erro ?></div>
+    <?php endif; ?>
 
-<?php if ($sucesso): ?>
-    <div class="sucesso"><?= $sucesso ?></div>
-<?php endif; ?>
+    <?php if ($sucesso): ?>
+        <div class="sucesso"><?= $sucesso ?></div>
+    <?php endif; ?>
 
-<!-- Formulário de busca -->
-<form action="alterar_usuario.php" method="POST">
-    <label for="busca_usuario">Digite o ID ou o nome do usuário: </label>
-    <input type="text" id="busca_usuario" name="busca_usuario" required onkeyup="buscarSugestoes()" value="<?= htmlspecialchars($busca_valor) ?>">
-    <div id="sugestoes"></div>
-    <button type="submit">Pesquisar</button>
-</form>
-
-<?php if ($usuario): ?>
-    <!-- Formulário de alteração -->
-    <form action="alterar_usuario.php" method="POST" onsubmit="return validarUsuario()">
-        <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($usuario['id_usuario']) ?>">
-
-        <label for="nome">Nome: </label>
-        <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
-
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
-
-        <label for="id_perfil">Perfil: </label>
-        <select id="id_perfil" name="id_perfil">
-            <option value="1" <?= $usuario['id_perfil']==1 ? 'selected':'' ?>>Administrador</option>
-            <option value="2" <?= $usuario['id_perfil']==2 ? 'selected':'' ?>>Secretaria</option>
-            <option value="3" <?= $usuario['id_perfil']==3 ? 'selected':'' ?>>Almoxarife</option>
-            <option value="4" <?= $usuario['id_perfil']==4 ? 'selected':'' ?>>Cliente</option>
-        </select>
-
-        <label for="nova_senha">Nova Senha:</label>
-        <input type="password" id="nova_senha" name="nova_senha">
-
-        <button type="submit">Alterar</button>
-        <button type="reset">Cancelar</button>
+    <!-- Formulário de busca -->
+    <form action="alterar_usuario.php" method="POST">
+        <label for="busca_usuario">Digite o ID ou o nome do usuário: </label>
+        <input type="text" id="busca_usuario" name="busca_usuario" required onkeyup="buscarSugestoes()"
+            value="<?= htmlspecialchars($busca_valor) ?>">
+        <div id="sugestoes"></div>
+        <button type="submit">Pesquisar</button>
     </form>
-<?php endif; ?>
 
-<div style="text-align:center;">
-    <a href="principal.php">
-        <img src="img/voltar.png" alt="Voltar">
-    </a>
-</div>
+    <?php if ($usuario): ?>
+        <!-- Formulário de alteração -->
+        <form action="alterar_usuario.php" method="POST" onsubmit="return validarUsuario()">
+            <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($usuario['id_usuario']) ?>">
 
-<br>
-<center>
-    <address>
-        João Paulo Varaldo - Técnico de desenvolvimento de sistemas
-    </address>
-</center>
+            <label for="nome">Nome: </label>
+            <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
+
+            <label for="id_perfil">Perfil: </label>
+            <select id="id_perfil" name="id_perfil">
+                <option value="1" <?= $usuario['id_perfil'] == 1 ? 'selected' : '' ?>>Administrador</option>
+                <option value="2" <?= $usuario['id_perfil'] == 2 ? 'selected' : '' ?>>Secretaria</option>
+                <option value="3" <?= $usuario['id_perfil'] == 3 ? 'selected' : '' ?>>Almoxarife</option>
+                <option value="4" <?= $usuario['id_perfil'] == 4 ? 'selected' : '' ?>>Cliente</option>
+            </select>
+
+            <label for="nova_senha">Nova Senha:</label>
+            <input type="password" id="nova_senha" name="nova_senha">
+
+            <button type="submit">Alterar</button>
+            <button type="reset">Cancelar</button>
+        </form>
+    <?php endif; ?>
+
+    <div style="text-align:center;">
+        <a href="principal.php">
+            <img src="img/voltar.png" alt="Voltar">
+        </a>
+    </div>
+
+    <br>
+    <center>
+        <p>
+            João Paulo Varaldo - Técnico de desenvolvimento de sistemas
+        </p>
+    </center>
 </body>
+
 </html>
