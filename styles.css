@@ -142,6 +142,7 @@ label {
 /* Ajusta os campos de entrada */
 input[type="text"],
 input[type="email"],
+input[type="double"],
 input[type="password"],
 select {
     width: 80%; /* Ocupa toda a largura do formulário */

@@ -123,11 +123,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form action="cadastro_usuario.php" method="POST" onsubmit="return validarUsuario()">
         <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required value="<?= isset($nome) ? htmlspecialchars($nome) : '' ?>">
+        <input type="text" id="nome" name="nome" required>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required
-            value="<?= isset($email) ? htmlspecialchars($email) : '' ?>">
+        <input type="email" id="email" name="email" required>
 
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha" required>
